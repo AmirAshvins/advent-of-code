@@ -1,8 +1,8 @@
 {
-  "name": "advent_of_code",
+  "name": "advent_of_code_2021",
   "version": "1.0.0",
   "description": "",
-  "main": "Dec02.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
