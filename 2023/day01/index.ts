@@ -83,25 +83,54 @@ const numMap: Record<string, number> = {
     "nine": 9,
 }
 
+const replace = (input: string): string => {
+    let string = input;
+    const numKeys = Object.keys(numMap);
+    let i = 0;
+
+    while (i < string.length) {
+        let longestMatch = "";
+        let matchLength = 0;
+
+        for (const numKey of numKeys) {
+            if (string.substring(i, numKey.length) === numKey && numKey.length > matchLength) {
+                longestMatch = numKey;
+                matchLength = numKey.length;
+            }
+        }
+
+        if (longestMatch) {
+            string = string.slice(0, i) + numMap[longestMatch] + string.slice(i + matchLength);
+            i += 1; // Move past the digit we just inserted
+        } else {
+            i += 1;
+        }
+    }
+
+    return string;
+}
+
 const sumOfAllCalibrationValuesPART2 = (inputArray: Array<string>): number => {
     let sum = 0;
     for (const _string of inputArray) {
-        const string = _string.replaceAll(/one|two|three|four|five|six|seven|eight|nine/g, (e: string) => numMap[e].toString());
+        const string = replace(_string);
         let start = 0;
         let end = string.length - 1;
-        let numStart = Number(string[start]);
-        let numEnd = Number(string[end]);
-        while (start <= end && end >= start && (Number.isNaN(numStart) || Number.isNaN(numEnd))) {
-            if (Number.isNaN(numStart)) {
-                start++;
-                numStart = Number(string[start]);
-            }
-            if (Number.isNaN(numEnd)) {
-                end--;
-                numEnd = Number(string[end]);
-            }
+
+        // Find the first numeric character
+        while (start < string.length && Number.isNaN(Number(string[start]))) {
+            start++;
         }
-        sum += Number(string[start] + string[end]);
+
+        // Find the last numeric character
+        while (end >= 0 && Number.isNaN(Number(string[end]))) {
+            end--;
+        }
+
+        // Ensure that both a start and end numeric character are found
+        if (start < string.length && end >= 0) {
+            sum += Number(string[start] + string[end]);
+        }
     }
     return sum;
 }
